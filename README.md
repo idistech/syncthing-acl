@@ -29,18 +29,16 @@ i) Install inotify-tools and acl : apt-get install inotify-tools acl
 ii) Ensure all syncthing servers are timesynced.
 
 ## To Install
-1) install -t /usr/local/bin -g root -o root -m 0774 syncthing-acl.sh
-2) install -t /etc/init -g root -o root -m 0640 syncthing.conf
-3) Edit /usr/local/bin/syncthing-acl.sh and edit RESPOSITORY
-4) Start the daemon , 
-   service syncthing-acl start
-, output is sent to /var/log/syslog. You can start the process on the commandline if you want to watch it. ( "/usr/local/bin/syncthing-acl.sh" ). You can set the LOGLevel to manage the level of debug.
-5) Update/Set your syncthing daemon to replicate the .acls folder ( without any backup or versioning ).
+* install -t /usr/local/bin -g root -o root -m 0774 syncthing-acl.sh
+* install -t /etc/init -g root -o root -m 0640 syncthing.conf
+* Edit /usr/local/bin/syncthing-acl.sh and edit RESPOSITORY
+* Start the daemon #service syncthing-acl start. Output is sent to /var/log/syslog. You can start the process on the commandline if you want to watch it. ( "/usr/local/bin/syncthing-acl.sh" ). You can set the LOGLevel to manage the level of debug.
+* Update/Set your syncthing daemon to replicate the .acls folder ( without any backup or versioning ).
 
 ## To Do
-i) Auto create Users and Groups if found
-ii) rewrite this in something more useful like perl, this is really beyond where bash should be used
-iii) Possibly read folder config from Syncthing, and automatically generate .acls folders under each syncthing folder.
-iv) more recovery modes in the event of failure ( unknown but suspected )
-v) Race conditions ? May Occur, but unknown.
-vi) Package installation, ppa etc.
+* Auto create Users and Groups if found
+* rewrite this in something more useful like perl, this is really beyond where bash should be used
+* Possibly read folder config from Syncthing, and automatically generate .acls folders under each syncthing folder.
+* more recovery modes in the event of failure ( unknown but suspected )
+* Race conditions ? May Occur, but unknown.
+* Package installation, ppa etc.
