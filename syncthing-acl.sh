@@ -22,7 +22,7 @@ IGNOREFILES="\.syncthing|\.stversions|\.stfolder|lost\+found"
 PIDFOLDER=/var/run/$APPNAME
 PIDFILE=/var/run/$APPNAME/$APPNAME.pid
 FILEJITTER=120
-VERSION="0.4 02/06/15"
+VERSION="0.5 09/07/15"
 LOGGEROPTS="-s"
 LOGLEVEL=1
 DEBUGMESSAGELEVEL=3
@@ -282,14 +282,9 @@ inotifywait -rmc -e modify,delete,attrib,moved_to,moved_from,move,create "$REPOS
                         [[ -f "$REPFile" ]] && [[ -d "$ACLFILE" ]] && rm -rf "$ACLFILE"  # Fix bad ACLS
 			case $events in
            			*ATTRIB* )					 # File File Date/Time Should Not be Updated
-					getfacl -p "$REPFile" >"$TEMPACLFILE"
-					if [ ! -f "$ACLFILE" ] || ! ( diff "$ACLFILE" "$TEMPACLFILE" >/dev/null )   ; then 
-						[ -d "$ACLFOLDER" ] || mkdir -p "$ACLFOLDER"
-						mv "$TEMPACLFILE" "$ACLFILE"
-						ACTION="Create/Modify ACLFile, ACL Has Changed" ; MESSAGELEVEL=1
-					else
-						ACTION="Do Nothing: File Attribute Change, But ACL Unchanged"; MESSAGELEVEL=2
-					fi
+					[ -d "$ACLFOLDER" ] || mkdir -p "$ACLFOLDER"
+					getfacl -p "$REPFile" >"$ACLFILE"
+					ACTION="Create/Modify ACLFile, ACL Has Changed" ; MESSAGELEVEL=1
 					;;
            			*CREATE* | *MODIFY* | *MOVE* | *MOVED_TO* )	 				# File Date/Time should be updated
 					getfacl -p "$REPFile" >"$TEMPACLFILE"
@@ -297,8 +292,6 @@ inotifywait -rmc -e modify,delete,attrib,moved_to,moved_from,move,create "$REPOS
 						if ! ( diff "$ACLFILE" "$TEMPACLFILE" >/dev/null )   ; then   # ACL File is Different than RepFile
                						if [ -d "$REPFile" ] && !( checkdirdiff "$ACLFILE" "$REPFile") ; then
                         					ACTION="Do Nothing: Change Event, But ACL File Older than REPFile (DIRECTORY Jitter)" ; MESSAGELEVEL=2
-                					elif [ -f "$REPFile" ] && [ "$ACLFILE" -ot "$REPFile" ]; then
-								ACTION="Do Nothing: Change Event, But ACLFile Older" ; MESSAGELEVEL=2
 							else						 # Set to ACL File, cos its newer
 								setfacl -M "$ACLFILE" "$REPFile"
 								setusergroup "$REPFile" "$ACLFILE"
