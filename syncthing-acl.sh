@@ -28,6 +28,14 @@ LOGLEVEL=1
 DEBUGMESSAGELEVEL=3
 WAITTIME=2
 
+if [ -f /etc/sysconfig/syncthing-acl ]; then
+   source /etc/sysconfig/syncthing-acl
+fi
+
+if [ -f /etc/default/syncthing-acl ]; then
+   source /etc/default/syncthing-acl
+fi
+
 
 #=========Logger
 
