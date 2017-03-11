@@ -22,7 +22,7 @@ IGNOREFILES="\.syncthing|\.stversions|\.stfolder|lost\+found"
 PIDFOLDER=/var/run/$APPNAME
 PIDFILE=/var/run/$APPNAME/$APPNAME.pid
 FILEJITTER=120
-VERSION="0.5 09/07/15"
+VERSION="0.5.1 2017.03.11"
 LOGGEROPTS="-s"
 LOGLEVEL=1
 DEBUGMESSAGELEVEL=3
@@ -207,8 +207,8 @@ dir-check &
 acl_check_pid=$!
 ionice -c 3 -p $acl_check_pid
 echo $acl_check_pid > $PIDILE.acl-check
-IFS=$','
-inotifywait -rmc -e modify,delete,attrib,moved_to,moved_from,move,create "$REPOSITORY" --exclude "$IGNOREFILES" |
+IFS=$'#'
+inotifywait -rm -e modify,delete,attrib,moved_to,moved_from,move,create "$REPOSITORY" --exclude "$IGNOREFILES" --format "%w%f#%e" |
         while  read -a items ; do
             wf=${items[0]}
             events=${items[1]}
@@ -329,7 +329,4 @@ inotifywait -rmc -e modify,delete,attrib,moved_to,moved_from,move,create "$REPOS
 		syncthing-log $MESSAGELEVEL "$EVENTTYPE : $ACTION : ACLFile=$ACLFILE REPFile=$REPFile Filename=$filename Events=$events"
 		syncthing-log $DEBUGMESSAGELEVEL "Debug : : subfile=$subfile subpath=$subpath subfile=$subfile subfolder=$subfolder"
 	done
-
-
-
 
